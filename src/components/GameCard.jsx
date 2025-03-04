@@ -7,12 +7,11 @@ import axios from "../axios";
 export default function GameCard(props) {
   const [sprite, setSprite] = useState([]);
   const [isLoading, setLoading] = useState(null);
-  const [name, setName] = useState(props.name);
-
+  
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(name);
+        const response = await axios.get(props.name);
         setSprite(response.data.sprites.other["official-artwork"]);
       } catch (error) {
         console.error(error);
@@ -21,7 +20,7 @@ export default function GameCard(props) {
     fetchData();
 
     setLoading(false);
-  }, [name]);
+  }, [props.name]);
 
   if (isLoading) {
     return <p>Loading...</p>;
@@ -36,7 +35,7 @@ export default function GameCard(props) {
         >
           <Card.Img variant="top" src={sprite.front_default} />
           <Card.Body>
-            <Card.Title>{name}</Card.Title>
+            <Card.Title>{props.name}</Card.Title>
           </Card.Body>
         </Card>
       </Col>
