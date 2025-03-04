@@ -21,7 +21,7 @@ export default function GameCard(props) {
     fetchData();
 
     setLoading(false);
-  }, []);
+  }, [name]);
 
   if (isLoading) {
     return <p>Loading...</p>;

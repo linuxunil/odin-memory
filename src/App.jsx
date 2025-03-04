@@ -75,7 +75,15 @@ function App() {
     if (newScore > highScore) setHS(newScore);
   }
 
-  const handleClick = (pokemonID) => {};
+  const handleClick = (pokemonID) => {
+    setPokidex(pokedex.map(pokemon => {
+      if (pokemon === pokemonID) {
+        return {...pokedex, clicked: true};
+      } else {
+        return pokemon;
+      }
+    }))
+  };
 
   return (
     <Container>
