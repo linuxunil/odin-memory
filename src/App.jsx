@@ -70,7 +70,7 @@ const defaultPokedex = [
 function App() {
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [pokedex, setPokedex] = useState(defaultPokedex);
+  const [pokedex,] = useState(defaultPokedex);
   const [selectedTokens, setSelected] = useState([]);
   const [pokemonToDisplay, setPokemonToDisply] = useState(defaultPokedex);
 
@@ -150,8 +150,18 @@ function App() {
 
       </Navbar>
       <Container>
+        {/* TODO add two rows. */}
         <Row className="justify-content-md-center pt-5">
-          {pokemonToDisplay.map((pokemon, index) => (
+          {pokemonToDisplay.slice(0, (pokemonToDisplay.length / 2) - 1).map((pokemon, index) => (
+            <GameCard
+              key={index}
+              pokemon={pokemon}
+              handleClick={handleClick}
+            />
+          ))}
+        </Row>
+        <Row className="justify-content-md-center pt-5">
+          {pokemonToDisplay.slice((pokemonToDisplay.length / 2), pokemonToDisplay.length - 1).map((pokemon, index) => (
             <GameCard
               key={index}
               pokemon={pokemon}
