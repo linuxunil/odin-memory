@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useReducer } from "react";
 import GameCard from "./components/GameCard";
 import "./App.css";
 import { Col, Row, Container } from "react-bootstrap";
@@ -67,22 +67,46 @@ const defaultPokedex = [
 ];
 
 function App() {
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
   const [score, setScore] = useState(0);
   const [highScore, setHS] = useState(0);
-  const [pokedex, setPokidex] = useState(defaultPokedex);
+  const [pokedex, setPokedex] = useState(defaultPokedex);
+  // const [pokimonToPlay, setPokimonToPlay] = useState();
+  const [pokemonToDisplay, setPokemonToDisply] = useState(defaultPokedex);
 
   function isHighScore(newScore) {
     if (newScore > highScore) setHS(newScore);
+    setScore(0);
+  }
+
+  function shuffle(array) {
+    let currentIndex = array.length;
+
+    // While there remain elements to shuffle
+    while (currentIndex !=0 ) {
+      // Pick a remaining element...
+      let randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    setPokemonToDisply(array);
+    forceUpdate();
   }
 
   const handleClick = (pokemonID) => {
-    setPokidex(pokedex.map(pokemon => {
-      if (pokemon === pokemonID) {
+    let newState = (pokedex.map(pokemon => {
+      if (pokemon.id === pokemonID) {
+        pokemon.clicked ? (isHighScore(score)) : (setScore(score +1 ));
         return {...pokedex, clicked: true};
       } else {
         return pokemon;
       }
-    }))
+    }));
+    setPokedex(newState);
+    shuffle(newState);
   };
 
   return (
@@ -92,7 +116,7 @@ function App() {
         <p>High Score: {highScore}</p>
       </div>
       <Row md={4}>
-        {pokedex.map((pokemon, index) => (
+        {pokemonToDisplay.map((pokemon, index) => (
           <GameCard
             key={index}
             name={pokemon.name}
