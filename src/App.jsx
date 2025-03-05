@@ -1,9 +1,7 @@
-import { useState, useReducer, useEffect } from "react";
+import { useState, useReducer } from "react";
 import GameCard from "./components/GameCard";
 import "./App.css";
 import { Navbar, Nav, NavDropdown, Row, Col, Container } from "react-bootstrap";
-import axios from "./axios";
-import { propTypes } from "react-bootstrap/esm/Image";
 
 const defaultPokedex = [
   {
@@ -68,14 +66,13 @@ const defaultPokedex = [
   },
 ];
 
+// BUGS: When high score is recorded images stop changing.
 function App() {
   const [, forceUpdate] = useReducer(x => x + 1, 0);
   const [score, setScore] = useState(0);
   const [highScore, setHS] = useState(0);
   const [pokedex, setPokedex] = useState(defaultPokedex);
-  const [imageCache, setImageCache] = useState({});
   const [pokemonToDisplay, setPokemonToDisply] = useState(defaultPokedex);
-  const [isLoading, setLoading] = useState(null);
 
   function isHighScore(newScore) {
     if (newScore > highScore) setHS(newScore);
@@ -98,25 +95,6 @@ function App() {
     setPokemonToDisply(array);
     forceUpdate();
   }
-  useEffect(() => {
-    async function cacheImages() {
-      try {
-        let cacheImages = {};
-        pokedex.map(async (pokemon) => {
-          const response = await axios.get(pokemon.name);
-          const img_url = response.data.sprites.other["official-artwork"];
-          cacheImages[pokemon.name] = img_url.front_default;
-        console.log(img_url.front_default);
-        console.log(cacheImages[pokemon.name]);
-      });
-      setImageCache(cacheImages);
-    } catch (error) {
-      console.error(error);
-    }
-    }
-    cacheImages();
-    setLoading(false);
-  },[pokedex])
 
   const handleClick = (pokemonID) => {
     let newState = (pokedex.map(pokemon => {
@@ -138,21 +116,6 @@ function App() {
         <Navbar.Brand href="#home">Pokemon Memorization</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          {/* <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
-          </Nav> */}
         </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
             <Col>
@@ -178,9 +141,7 @@ function App() {
             key={index}
             name={pokemon.name}
             handleClick={handleClick}
-            images={imageCache}
             id={pokemon.id}
-            isLoading={isLoading}
           />
         ))}
       </Row>
