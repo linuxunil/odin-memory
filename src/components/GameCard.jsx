@@ -1,9 +1,28 @@
+import { useEffect, useState } from "react";
 import { Card, Col, Placeholder } from "react-bootstrap";
-// import axios from "../axios";
+import axios from "../axios";
 
 //Display picture of pokemon
 //Display pokemon name
 export default function GameCard(props) {
+  const [imageURL, setURL] = useState(null)
+  const [name, setName] = useState(props.name);
+
+  useEffect(() => {
+    async function getImageURL() {
+      let response;
+      let sprites;
+      try {
+          response = await axios.get(props.name);
+          sprites = response.data.sprites.other["official-artwork"];
+          setURL(sprites.front_default);
+          setName(props.name);
+      } catch(error) {
+        console.error(error);
+      }
+    }
+    getImageURL();
+  }, [imageURL, props.name]);
 
     return (
       <Col md={"auto"}>
@@ -12,10 +31,9 @@ export default function GameCard(props) {
             props.handleClick(props.id);
           }}
         >
-          {console.log(props.images[props.name])}
-          <Card.Img variant="top" src={props.images[props.name]} />
+          <Card.Img variant="top" src={imageURL} />
           <Card.Body>
-            <Card.Title>{props.name}</Card.Title>
+            <Card.Title>{name}</Card.Title>
           </Card.Body>
         </Card>
       </Col>
