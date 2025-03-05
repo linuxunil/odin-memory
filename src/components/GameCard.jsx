@@ -26,9 +26,9 @@ export default function GameCard(props) {
     return <p>Loading...</p>;
   } else {
     return (
-      <Col>
+      <Col md={"auto"}>
         <Card
-          style={{ width: "12rem" }}
+          style={{ width: "14rem", height: "15rem" }}
           onClick={() => {
             props.handleClick(props.id);
           }}

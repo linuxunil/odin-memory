@@ -1,7 +1,7 @@
 import { useState, useReducer } from "react";
 import GameCard from "./components/GameCard";
 import "./App.css";
-import { Col, Row, Container } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Row, Col, Container } from "react-bootstrap";
 
 const defaultPokedex = [
   {
@@ -110,12 +110,47 @@ function App() {
   };
 
   return (
+    <>
+    <Navbar expand="lg" className="bg-body-tertiary" pb={4}>
+      <Container>
+        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="me-auto">
+            <Nav.Link href="#home">Home</Nav.Link>
+            <Nav.Link href="#link">Link</Nav.Link>
+            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.2">
+                Another action
+              </NavDropdown.Item>
+              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+              <NavDropdown.Divider />
+              <NavDropdown.Item href="#action/3.4">
+                Separated link
+              </NavDropdown.Item>
+            </NavDropdown>
+          </Nav>
+        </Navbar.Collapse>
+          <Navbar.Collapse className="justify-content-end">
+            <Col>
+            <Row>
+            <Navbar.Text>
+              Score: {score}
+            </Navbar.Text>
+            </Row>
+            <Row>
+            <Navbar.Text>
+              High Score: {highScore}
+            </Navbar.Text>
+            </Row>
+            </Col>
+          </Navbar.Collapse>
+      </Container>
+
+    </Navbar>
     <Container>
-      <div>
-        <p>Score: {score}</p>
-        <p>High Score: {highScore}</p>
-      </div>
-      <Row md={4}>
+        <Row className="justify-content-md-center">
         {pokemonToDisplay.map((pokemon, index) => (
           <GameCard
             key={index}
@@ -126,6 +161,7 @@ function App() {
         ))}
       </Row>
     </Container>
+    </>
   );
 }
 export default App;
