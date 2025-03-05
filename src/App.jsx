@@ -1,7 +1,7 @@
 import { useState } from "react";
 import GameCard from "./components/GameCard";
 import "./App.css";
-import { Navbar, Nav, NavDropdown, Row, Col, Container } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown, Row, Col, Container, CardGroup } from "react-bootstrap";
 
 const defaultPokedex = [
   {
@@ -70,7 +70,7 @@ const defaultPokedex = [
 function App() {
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
-  const [pokedex, setPokedex] = useState(defaultPokedex);
+  const [pokedex,] = useState(defaultPokedex);
   const [selectedTokens, setSelected] = useState([]);
   const [pokemonToDisplay, setPokemonToDisply] = useState(defaultPokedex);
 
@@ -126,8 +126,9 @@ function App() {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-body-tertiary" pb={4}>
-        <Container>
+      <Container fluid>
+        <Navbar expand="lg" className="bg-body-tertiary" pb={4} fixed="top">
+
           <Navbar.Brand href="#home">Pokemon Memorization</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -146,12 +147,21 @@ function App() {
               </Row>
             </Col>
           </Navbar.Collapse>
-        </Container>
 
-      </Navbar>
-      <Container>
-        <Row className="justify-content-md-center pt-5">
-          {pokemonToDisplay.map((pokemon, index) => (
+
+        </Navbar >
+      </Container>
+      <Container fluid>
+        {/* TODO add two rows. */}
+        <Row>
+          {pokemonToDisplay.slice(0, (pokemonToDisplay.length / 2) - 1).map((pokemon, index) => (
+            <GameCard
+              key={index}
+              pokemon={pokemon}
+              handleClick={handleClick}
+            />
+          ))}
+          {pokemonToDisplay.slice((pokemonToDisplay.length / 2), pokemonToDisplay.length - 1).map((pokemon, index) => (
             <GameCard
               key={index}
               pokemon={pokemon}
