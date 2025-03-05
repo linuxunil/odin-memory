@@ -66,6 +66,7 @@ const defaultPokedex = [
   },
 ];
 
+// BUGS: When high score is recorded images stop changing.
 function App() {
   const [, forceUpdate] = useReducer(x => x + 1, 0);
   const [score, setScore] = useState(0);

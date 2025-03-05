@@ -4,6 +4,8 @@ import axios from "../axios";
 
 //Display picture of pokemon
 //Display pokemon name
+// TODO: Flip cards on click.
+
 export default function GameCard(props) {
   const [imageURL, setURL] = useState(null)
   const [name, setName] = useState(props.name);
