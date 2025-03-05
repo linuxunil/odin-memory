@@ -66,26 +66,39 @@ const defaultPokedex = [
   },
 ];
 
-// BUGS: When high score is recorded images stop changing.
+// FIXME: When high score is recorded images stop changing.
 function App() {
   const [score, setScore] = useState(0);
-  const [highScore, setHS] = useState(0);
+  const [highScore, setHighScore] = useState(0);
   const [pokedex, setPokedex] = useState(defaultPokedex);
+  const [selectedTokens, setSelected] = useState([]);
   const [pokemonToDisplay, setPokemonToDisply] = useState(defaultPokedex);
 
-  function isHighScore(newScore) {
+  function gameOver(newScore) {
     // Check if score is higher than old HS
-    if (newScore > highScore) setHS(newScore); //Set HS to new score
+    // if (newScore > highScore) { setHS(newScore) } //Set HS to new score
+    if (newScore > highScore) {
+      setHighScore(newScore);
+    }
     // reset score
     // TODO: Reset clicked values.
     setScore(0);
+  }
+
+  function resetGame() {
+    const resetDex = pokedex.map((pokemon) => {
+      return { ...pokemon, clicked: false };
+    });
+    console.log(resetDex);
+    setSelected('');
+    console.log("Reset Pokedex")
   }
 
   function shuffle(array) {
     let currentIndex = array.length;
 
     // While there remain elements to shuffle
-    while (currentIndex !=0 ) {
+    while (currentIndex != 0) {
       // Pick a remaining element...
       let randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
@@ -94,66 +107,59 @@ function App() {
       [array[currentIndex], array[randomIndex]] = [
         array[randomIndex], array[currentIndex]];
     }
-    setPokemonToDisply(array);
+    return array;
+  }
+
+  const handleClick = (pokemonName) => {
+    if (selectedTokens.indexOf(pokemonName) >= 0) {
+      gameOver(score);
+      resetGame();
+    } else {
+      console.log(`Added ${pokemonName}`);
+      setSelected([...selectedTokens, pokemonName])
+      setScore(score + 1);
     }
 
-  const handleClick = (pokemonID) => {
-    // Make a new pokedex state with updated clicked value for entry
-    let newPokedexState = (pokedex.map(pokemon => {
-      if (pokemon.id === pokemonID) {
-        // if the pokemon is already clicked check for high score.
-        // otherwise increase the current score
-        pokemon.clicked ? (isHighScore(score)) : (setScore(score +1 ));
-        // change this entryies clicked to true.
-        return {...pokemon, clicked: true};
-      } else {
-        // return this entry it didn't change
-        return pokemon;
-      }
-    }));
-    // Shuffle order
-    shuffle(newPokedexState);
     // Set new order
-    setPokedex(newPokedexState);
+    setPokemonToDisply(shuffle(pokemonToDisplay));
   };
 
   return (
     <>
-    <Navbar expand="lg" className="bg-body-tertiary" pb={4}>
-      <Container>
-        <Navbar.Brand href="#home">Pokemon Memorization</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-        </Navbar.Collapse>
+      <Navbar expand="lg" className="bg-body-tertiary" pb={4}>
+        <Container>
+          <Navbar.Brand href="#home">Pokemon Memorization</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+          </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
             <Col>
-            <Row>
-            <Navbar.Text>
-              Score: {score}
-            </Navbar.Text>
-            </Row>
-            <Row>
-            <Navbar.Text>
-              High Score: {highScore}
-            </Navbar.Text>
-            </Row>
+              <Row>
+                <Navbar.Text>
+                  Score: {score}
+                </Navbar.Text>
+              </Row>
+              <Row>
+                <Navbar.Text>
+                  High Score: {highScore}
+                </Navbar.Text>
+              </Row>
             </Col>
           </Navbar.Collapse>
-      </Container>
+        </Container>
 
-    </Navbar>
-    <Container>
+      </Navbar>
+      <Container>
         <Row className="justify-content-md-center pt-5">
-        {pokemonToDisplay.map((pokemon, index) => (
-          <GameCard
-            key={index}
-            name={pokemon.name}
-            handleClick={handleClick}
-            id={pokemon.id}
-          />
-        ))}
-      </Row>
-    </Container>
+          {pokemonToDisplay.map((pokemon, index) => (
+            <GameCard
+              key={index}
+              pokemon={pokemon}
+              handleClick={handleClick}
+            />
+          ))}
+        </Row>
+      </Container>
     </>
   );
 }
