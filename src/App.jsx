@@ -1,7 +1,9 @@
-import { useState, useReducer } from "react";
+import { useState, useReducer, useEffect } from "react";
 import GameCard from "./components/GameCard";
 import "./App.css";
 import { Navbar, Nav, NavDropdown, Row, Col, Container } from "react-bootstrap";
+import axios from "./axios";
+import { propTypes } from "react-bootstrap/esm/Image";
 
 const defaultPokedex = [
   {
@@ -71,8 +73,9 @@ function App() {
   const [score, setScore] = useState(0);
   const [highScore, setHS] = useState(0);
   const [pokedex, setPokedex] = useState(defaultPokedex);
-  // const [pokimonToPlay, setPokimonToPlay] = useState();
+  const [imageCache, setImageCache] = useState({});
   const [pokemonToDisplay, setPokemonToDisply] = useState(defaultPokedex);
+  const [isLoading, setLoading] = useState(null);
 
   function isHighScore(newScore) {
     if (newScore > highScore) setHS(newScore);
@@ -95,6 +98,25 @@ function App() {
     setPokemonToDisply(array);
     forceUpdate();
   }
+  useEffect(() => {
+    async function cacheImages() {
+      try {
+        let cacheImages = {};
+        pokedex.map(async (pokemon) => {
+          const response = await axios.get(pokemon.name);
+          const img_url = response.data.sprites.other["official-artwork"];
+          cacheImages[pokemon.name] = img_url.front_default;
+        console.log(img_url.front_default);
+        console.log(cacheImages[pokemon.name]);
+      });
+      setImageCache(cacheImages);
+    } catch (error) {
+      console.error(error);
+    }
+    }
+    cacheImages();
+    setLoading(false);
+  },[pokedex])
 
   const handleClick = (pokemonID) => {
     let newState = (pokedex.map(pokemon => {
@@ -113,10 +135,10 @@ function App() {
     <>
     <Navbar expand="lg" className="bg-body-tertiary" pb={4}>
       <Container>
-        <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+        <Navbar.Brand href="#home">Pokemon Memorization</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
+          {/* <Nav className="me-auto">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#link">Link</Nav.Link>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
@@ -130,7 +152,7 @@ function App() {
                 Separated link
               </NavDropdown.Item>
             </NavDropdown>
-          </Nav>
+          </Nav> */}
         </Navbar.Collapse>
           <Navbar.Collapse className="justify-content-end">
             <Col>
@@ -150,13 +172,15 @@ function App() {
 
     </Navbar>
     <Container>
-        <Row className="justify-content-md-center">
+        <Row className="justify-content-md-center pt-5">
         {pokemonToDisplay.map((pokemon, index) => (
           <GameCard
             key={index}
             name={pokemon.name}
             handleClick={handleClick}
+            images={imageCache}
             id={pokemon.id}
+            isLoading={isLoading}
           />
         ))}
       </Row>
