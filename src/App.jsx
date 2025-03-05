@@ -1,4 +1,4 @@
-import { useState, useReducer } from "react";
+import { useState } from "react";
 import GameCard from "./components/GameCard";
 import "./App.css";
 import { Navbar, Nav, NavDropdown, Row, Col, Container } from "react-bootstrap";
@@ -68,7 +68,6 @@ const defaultPokedex = [
 
 // BUGS: When high score is recorded images stop changing.
 function App() {
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
   const [score, setScore] = useState(0);
   const [highScore, setHS] = useState(0);
   const [pokedex, setPokedex] = useState(defaultPokedex);
@@ -93,8 +92,7 @@ function App() {
         array[randomIndex], array[currentIndex]];
     }
     setPokemonToDisply(array);
-    forceUpdate();
-  }
+    }
 
   const handleClick = (pokemonID) => {
     let newState = (pokedex.map(pokemon => {
@@ -105,8 +103,8 @@ function App() {
         return pokemon;
       }
     }));
-    setPokedex(newState);
     shuffle(newState);
+    setPokedex(newState);
   };
 
   return (
