@@ -128,31 +128,25 @@ function App() {
     <>
       <Container fluid>
         <Navbar expand="lg" className="bg-body-tertiary" pb={4} fixed="top">
-
           <Navbar.Brand href="#home">Pokemon Memorization</Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
           </Navbar.Collapse>
-          <Navbar.Collapse className="justify-content-end">
-            <Col>
-              <Row>
-                <Navbar.Text>
-                  Score: {score}
-                </Navbar.Text>
-              </Row>
-              <Row>
-                <Navbar.Text>
-                  High Score: {highScore}
-                </Navbar.Text>
-              </Row>
-            </Col>
-          </Navbar.Collapse>
-
-
+          <Col>
+            <Row>
+              <Navbar.Text>
+                Score: {score}
+              </Navbar.Text>
+            </Row>
+            <Row>
+              <Navbar.Text>
+                High Score: {highScore}
+              </Navbar.Text>
+            </Row>
+          </Col>
         </Navbar >
       </Container>
       <Container fluid>
-        {/* TODO add two rows. */}
         <Row>
           {pokemonToDisplay.slice(0, (pokemonToDisplay.length / 2) - 1).map((pokemon, index) => (
             <GameCard
