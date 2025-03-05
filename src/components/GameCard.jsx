@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, Col, Placeholder } from "react-bootstrap";
+import { Image, Col, Placeholder } from "react-bootstrap";
 import axios from "../axios";
 
 //Display picture of pokemon
@@ -32,17 +32,19 @@ export default function GameCard(props) {
   }, [imageURL, props.pokemon.name]);
 
   return (
-    <Col md={"auto"}>
-      <Card style={{ width: "14rem", height: "15rem" }}
-        onClick={() => {
-          props.handleClick(name);
-        }}
-      >
-        <Card.Img variant="top" src={imageURL} />
-        <Card.Body>
-          <Card.Title>{name}</Card.Title>
-        </Card.Body>
-      </Card>
+    <Col xs={4} md={3}>
+      <Image src={imageURL} fluid onClick={() => { props.handleClick(name) }} />
+      <p>{name}</p>
     </Col>
+    // <Col key={props.index}>
+    //   <Card onClick={() => { props.handleClick(name); }} style={{
+    //     fontSize: "5vw"
+    //   }}>
+    //     <Card.Img variant="top" src={imageURL} />
+    //     <Card.Body>
+    //       <Card.Text>{name}</Card.Text>
+    //     </Card.Body >
+    //   </Card >
+    // </Col>
   );
 }
