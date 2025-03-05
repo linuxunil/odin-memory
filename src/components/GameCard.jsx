@@ -5,19 +5,24 @@ import axios from "../axios";
 //Display picture of pokemon
 //Display pokemon name
 // TODO: Flip cards on click.
-
 export default function GameCard(props) {
-  const [imageURL, setURL] = useState(null)
-  const [name, setName] = useState(props.name);
+  const [imageURL, setURL] = useState(null); // URL for image from API
+  const [name, setName] = useState(props.name); // Name of pokemon
 
   useEffect(() => {
+    // Get image to display on card
     async function getImageURL() {
-      let response;
-      let sprites;
+      // We have to split the response due to 'official-artwork' hyphen
+      let response; // First part of response
+      let sprites; // second part of response
       try {
+        // get json from api. baseURL in axios.js + pokemon name
           response = await axios.get(props.name);
+          // get first half listing sprites
           sprites = response.data.sprites.other["official-artwork"];
+          //set url to the default artwork
           setURL(sprites.front_default);
+          // set the name.
           setName(props.name);
       } catch(error) {
         console.error(error);

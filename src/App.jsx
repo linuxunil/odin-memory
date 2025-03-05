@@ -74,7 +74,10 @@ function App() {
   const [pokemonToDisplay, setPokemonToDisply] = useState(defaultPokedex);
 
   function isHighScore(newScore) {
-    if (newScore > highScore) setHS(newScore);
+    // Check if score is higher than old HS
+    if (newScore > highScore) setHS(newScore); //Set HS to new score
+    // reset score
+    // TODO: Reset clicked values.
     setScore(0);
   }
 
@@ -95,16 +98,23 @@ function App() {
     }
 
   const handleClick = (pokemonID) => {
-    let newState = (pokedex.map(pokemon => {
+    // Make a new pokedex state with updated clicked value for entry
+    let newPokedexState = (pokedex.map(pokemon => {
       if (pokemon.id === pokemonID) {
+        // if the pokemon is already clicked check for high score.
+        // otherwise increase the current score
         pokemon.clicked ? (isHighScore(score)) : (setScore(score +1 ));
-        return {...pokedex, clicked: true};
+        // change this entryies clicked to true.
+        return {...pokemon, clicked: true};
       } else {
+        // return this entry it didn't change
         return pokemon;
       }
     }));
-    shuffle(newState);
-    setPokedex(newState);
+    // Shuffle order
+    shuffle(newPokedexState);
+    // Set new order
+    setPokedex(newPokedexState);
   };
 
   return (
