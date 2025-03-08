@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import GameCard from "./components/GameCard";
 import "./App.css";
-import { Navbar, Nav, NavDropdown, Row, Col, Container, CardGroup } from "react-bootstrap";
 import axios from "./axios";
+import { Grid2 } from "@mui/material";
 
 // const defaultPokedex = [
 //   {
@@ -162,49 +162,29 @@ function App() {
 
   return (
     <>
-      <Container fluid>
-        <Navbar expand="lg" className="bg-body-tertiary" pb={4} fixed="top">
-          <Navbar.Brand href="#home">Pokemon Memorization</Navbar.Brand>
-          <Col className="justify-content-end">
-            <Row>
-              <Navbar.Text>
-                Score: {score}
-              </Navbar.Text>
-            </Row>
-            <Row>
-              <Navbar.Text>
-                High Score: {highScore}
-              </Navbar.Text>
-            </Row>
-          </Col>
-        </Navbar >
-      </Container>
-      <Container pb={4} fluid>
-
-        {pokemonToDisplay &&
-          <Row>
-            {
-              pokemonToDisplay.slice(0, (pokemonToDisplay.length / 2) - 1).map((pokemon, index) => (
-                <GameCard
-                  key={index}
-                  tokenName={pokemon.name}
-                  tokenURL={pokemon.url}
-                  handleClick={handleClick}
-                />
-              ))
-            }
-            {pokemonToDisplay.slice((pokemonToDisplay.length / 2), pokemonToDisplay.length - 1).map((pokemon, index) => (
+      {pokemonToDisplay &&
+        <Grid2 container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          {
+            pokemonToDisplay.slice(0, (pokemonToDisplay.length / 2) - 1).map((pokemon, index) => (
               <GameCard
                 key={index}
                 tokenName={pokemon.name}
                 tokenURL={pokemon.url}
                 handleClick={handleClick}
               />
+            ))
+          }
+          {pokemonToDisplay.slice((pokemonToDisplay.length / 2), pokemonToDisplay.length - 1).map((pokemon, index) => (
+            <GameCard
+              key={index}
+              tokenName={pokemon.name}
+              tokenURL={pokemon.url}
+              handleClick={handleClick}
+            />
 
-            ))}
-          </Row>
-        }
-      </Container >
+          ))}
+        </Grid2 >
+      }
     </>
   );
 }

@@ -1,6 +1,6 @@
+import { Grid2 } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Image, Col, Placeholder } from "react-bootstrap";
 
 //Display picture of pokemon
 //Display pokemon name
@@ -19,9 +19,8 @@ export default function GameCard(props) {
   }, [props.tokenName, props.tokenURL]);
 
   return (
-    <Col xs={4} md={3}>
-      <Image src={imageURL} fluid onClick={() => { props.handleClick(name) }} />
+    <Grid2 size={6}>
       <p>{name}</p>
-    </Col>
+    </Grid2>
   );
 }
