@@ -69,8 +69,8 @@ import axios from "./axios";
 
 function App() {
   const [fetchParams] = useState({ limit: '1000', offset: '0' });
-  const [gameDiff, setDiff] = useState(12);
-  const [gameStart, setStart] = useState(6);
+  const [gameDiff,] = useState(12);
+  const [gameStart,] = useState(6);
 
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
