@@ -2,75 +2,11 @@ import { useState, useEffect } from "react";
 import GameCard from "./components/GameCard";
 import "./App.css";
 import axios from "./axios";
-import { Grid2 } from "@mui/material";
-
-// const defaultPokedex = [
-//   {
-//     id: 1,
-//     name: "Pikachu",
-//     clicked: false,
-//   },
-//   {
-//     id: 2,
-//     name: "Charmander",
-//     clicked: false,
-//   },
-//   {
-//     id: 3,
-//     name: "Squirtle",
-//     clicked: false,
-//   },
-//   {
-//     id: 4,
-//     name: "Jigglypuff",
-//     clicked: false,
-//   },
-//   {
-//     id: 5,
-//     name: "Meowth",
-//     clicked: false,
-//   },
-//   {
-//     id: 6,
-//     name: "Eevee",
-//     clicked: false,
-//   },
-//   {
-//     id: 7,
-//     name: "Snorlax",
-//     clicked: false,
-//   },
-//   {
-//     id: 8,
-//     name: "Gengar",
-//     clicked: false,
-//   },
-//   {
-//     id: 9,
-//     name: "Mewtwo",
-//     clicked: false,
-//   },
-//   {
-//     id: 10,
-//     name: "Charizard",
-//     clicked: false,
-//   },
-//   {
-//     id: 11,
-//     name: "Vaporeon",
-//     clicked: false,
-//   },
-//   {
-//     id: 12,
-//     name: "ditto",
-//     clicked: false,
-//   },
-// ];
-
+import Navigation from "./components/Navigation";
 function App() {
-  const [fetchParams] = useState({ limit: '1000', offset: '0' });
-  const [gameDiff,] = useState(12);
-  const [gameStart,] = useState(6);
+  const [fetchParams] = useState({ limit: "1000", offset: "0" });
+  const [gameDiff] = useState(12);
+  const [gameStart] = useState(6);
 
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
@@ -82,11 +18,15 @@ function App() {
     //Fetch list of pokemon for pokedex
     async function fetchPokedex() {
       try {
-        await axios.get(`?limit=${fetchParams.limit}&offset=${fetchParams.offset}`).then((request) => {
-          const newDex = request.data.results.map((pokemon, index) => { return { name: pokemon.name, url: pokemon.url, index } });
-          setPokeDex(newDex);
-          setPokemonToDisply(newDex.slice(gameStart, (gameDiff + gameStart) - 1));
-        });
+        await axios
+          .get(`?limit=${fetchParams.limit}&offset=${fetchParams.offset}`)
+          .then((request) => {
+            const newDex = request.data.results.map((pokemon, index) => {
+              return { name: pokemon.name, url: pokemon.url, index };
+            });
+            setPokeDex(newDex);
+            setPokemonToDisply(newDex.slice(gameStart, gameDiff + gameStart));
+          });
       } catch (error) {
         if (error.response) {
           // The request was made and the server responded with a status code
@@ -101,14 +41,13 @@ function App() {
           console.error(error.request);
         } else {
           // Something happened in setting up the request that triggered an Error
-          console.error('Error', error.message);
+          console.error("Error", error.message);
         }
         console.log(error.config);
       }
     }
     fetchPokedex();
     console.log(pokeDex);
-
   }, [fetchParams.limit, fetchParams.offset]);
 
   function gameOver(newScore) {
@@ -126,8 +65,8 @@ function App() {
       return { ...pokemon, clicked: false };
     });
     console.log(resetDex);
-    setSelected('');
-    console.log("Reset Pokedex")
+    setSelected("");
+    console.log("Reset Pokedex");
   }
 
   function shuffle(array) {
@@ -141,18 +80,20 @@ function App() {
 
       // And swap it with current element.
       [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
+        array[randomIndex],
+        array[currentIndex],
+      ];
     }
     return array;
   }
 
-  const handleClick = (pokemonName) => {
+  const handleClick = (e, pokemonName) => {
     if (selectedTokens.indexOf(pokemonName) >= 0) {
       gameOver(score);
       resetGame();
     } else {
       console.log(`Added ${pokemonName}`);
-      setSelected([...selectedTokens, pokemonName])
+      setSelected([...selectedTokens, pokemonName]);
       setScore(score + 1);
     }
 
@@ -162,29 +103,19 @@ function App() {
 
   return (
     <>
-      {pokemonToDisplay &&
-        <Grid2 container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          {
-            pokemonToDisplay.slice(0, (pokemonToDisplay.length / 2) - 1).map((pokemon, index) => (
-              <GameCard
-                key={index}
-                tokenName={pokemon.name}
-                tokenURL={pokemon.url}
-                handleClick={handleClick}
-              />
-            ))
-          }
-          {pokemonToDisplay.slice((pokemonToDisplay.length / 2), pokemonToDisplay.length - 1).map((pokemon, index) => (
+      <Navigation score={score} highScore={highScore} />
+      {pokemonToDisplay && (
+        <div className="row">
+          {pokemonToDisplay.map((pokemon, index) => (
             <GameCard
               key={index}
               tokenName={pokemon.name}
               tokenURL={pokemon.url}
               handleClick={handleClick}
             />
-
           ))}
-        </Grid2 >
-      }
+        </div>
+      )}
     </>
   );
 }

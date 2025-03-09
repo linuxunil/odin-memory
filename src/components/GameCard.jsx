@@ -1,6 +1,6 @@
-import { Grid2 } from "@mui/material";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import axios from "../axios.js";
+import { useState, useEffect } from "react";
+import Image from "./Image";
 
 //Display picture of pokemon
 //Display pokemon name
@@ -11,16 +11,27 @@ export default function GameCard(props) {
 
   useEffect(() => {
     // Get image to display on card
-    axios.get(props.tokenURL).then((request) =>
-      setURL(request.data.sprites.other['official-artwork'].front_default)).catch((error) =>
-        confirm.error(error));
-    setName(props.tokenName);
-    console.debug(`Set ${props.tokenName} url to ${props.tokenURL}`)
+    axios
+      .get(props.tokenURL)
+      .then((request) =>
+        setURL(request.data.sprites.other["official-artwork"].front_default),
+      )
+      .catch((error) => confirm.error(error));
   }, [props.tokenName, props.tokenURL]);
 
   return (
-    <Grid2 size={6}>
-      <p>{name}</p>
-    </Grid2>
+    <div className="column">
+      <div className="card">
+        <img
+          src={imageURL}
+          onClick={(e) => props.handleClick(e, props.tokenName)}
+        />
+        <div className="container">
+          <h4>
+            <b>{props.tokenName}</b>
+          </h4>
+        </div>
+      </div>
+    </div>
   );
 }
